@@ -40,7 +40,7 @@
             <img src="{{ asset('images/AGRICULTURA-02.png') }}" 
                  alt="Secretaría de Agricultura" 
                  class="h-20 md:h-24 w-auto mx-auto object-contain"
-                 onerror="this.src='https://via.placeholder.com/200x80/6a1c32/ffffff?text=AGRICULTURA'">
+                 >
         </div>
         
         {{-- SEPARADOR DECORATIVO --}}

@@ -60,7 +60,7 @@
                     <img src="{{ $producto->imagen_principal_url }}" 
                          alt="{{ $producto->nombre }}" 
                          class="w-full h-full object-cover" style="min-height: 350px;"
-                         onerror="this.src='https://via.placeholder.com/400x400/6a1c32/ffffff?text={{ $producto->nombre }}'">
+                         >
                 </div>
                 
                 <div class="md:w-3/5 p-6 md:p-8">
@@ -265,7 +265,7 @@
                 <img src="{{ $relacionado->imagen_principal_url }}" 
                      alt="{{ $relacionado->nombre }}" 
                      class="w-full h-24 object-cover rounded mb-2"
-                     onerror="this.src='https://via.placeholder.com/150/6a1c32/ffffff?text={{ $relacionado->nombre }}'">
+                     >
                 <h4 class="font-medium text-sm group-hover:text-[#6a1c32] transition truncate">{{ $relacionado->nombre }}</h4>
                 <p class="text-[10px] text-gray-400 truncate">{{ $relacionado->categoria?->nombre ?? '' }}</p>
             </a>

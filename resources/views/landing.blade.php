@@ -120,7 +120,7 @@
                     <img src="{{ $producto->imagen_principal_url }}" 
                          alt="{{ $producto->nombre }}" 
                          class="w-full h-full object-cover"
-                         onerror="this.src='https://via.placeholder.com/400x300/6a1c32/ffffff?text={{ $producto->nombre }}'">
+                         >
                     @if($producto->destacado)
                         <span class="absolute top-2 right-2 px-3 py-1 text-xs font-bold text-white rounded-full bg-[#b17a45]">
                             Destacado

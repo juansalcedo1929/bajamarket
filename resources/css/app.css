@@ -1,3 +1,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+/* Placeholder para imágenes que no cargan */
+img[src*="storage"] {
+    @apply bg-gradient-to-br from-[#6a1c32] to-[#b17a45];
+}
+
+img:not([src]), img[src=""], img[src="#"] {
+    @apply hidden;
+}
