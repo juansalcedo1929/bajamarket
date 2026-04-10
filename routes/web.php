@@ -10,6 +10,22 @@ use App\Http\Controllers\Admin\ProductorController as AdminProductorController;
 use App\Http\Controllers\Admin\ProductoController as AdminProductoController;
 use App\Http\Controllers\Admin\CategoriaController as AdminCategoriaController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Artisan;
+
+// ============================================
+// RUTA TEMPORAL PARA CONFIGURAR STORAGE EN RAILWAY
+// ============================================
+Route::get('/setup-storage', function () {
+    Artisan::call('storage:link');
+    Artisan::call('optimize:clear');
+    
+    return response()->json([
+        'success' => true,
+        'message' => '✅ Storage link creado y caché limpiada.',
+        'storage_path' => public_path('storage'),
+        'link' => '<a href="/">Ir al sitio</a>'
+    ]);
+});
 
 // Ruta principal - Landing Page
 Route::get('/', [LandingController::class, 'index'])->name('landing');
@@ -67,6 +83,7 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::resource('categorias', AdminCategoriaController::class)->parameters([
         'categorias' => 'categoria'
     ]);
+    
 });
 
 // Rutas de autenticación
