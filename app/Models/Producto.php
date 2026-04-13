@@ -62,13 +62,21 @@ class Producto extends Model
         return $query->where('disponible', true);
     }
 
-    public function getImagenPrincipalUrlAttribute(): string
-    {
-        return $this->imagen_principal 
-            ? asset('storage/' . $this->imagen_principal) 
-            : asset('images/default-product.jpg');
+public function getImagenPrincipalUrlAttribute(): string
+{
+    if ($this->imagen_principal) {
+        // Si ya es una URL externa (HTTP/HTTPS), la devolvemos tal cual
+        if (filter_var($this->imagen_principal, FILTER_VALIDATE_URL)) {
+            return $this->imagen_principal;
+        }
+        
+        // Usar la ruta personalizada que sirve archivos directamente desde storage
+        return route('storage.image', ['path' => $this->imagen_principal]);
     }
-
+    
+    // Imagen por defecto (puedes poner una URL de placeholder o ruta local)
+    return asset('images/default-product.jpg');
+}
     public function getUrlAttribute(): string
     {
         return route('producto.show', $this->slug);

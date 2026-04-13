@@ -27,6 +27,23 @@ Route::get('/setup-storage', function () {
     ]);
 });
 
+// ============================================
+// RUTA DE DIAGNÓSTICO PARA VER ARCHIVOS EN STORAGE
+// ============================================
+Route::get('/check-storage', function () {
+    $productosPath = storage_path('app/public/productos');
+    $productoresPath = storage_path('app/public/productores');
+    
+    return response()->json([
+        'storage_app_public_exists' => is_dir(storage_path('app/public')),
+        'productos_exists' => is_dir($productosPath),
+        'productos_files' => is_dir($productosPath) ? array_values(array_diff(scandir($productosPath), ['.', '..'])) : [],
+        'productores_exists' => is_dir($productoresPath),
+        'productores_files' => is_dir($productoresPath) ? array_values(array_diff(scandir($productoresPath), ['.', '..'])) : [],
+        'public_storage_exists' => is_dir(public_path('storage')),
+    ]);
+});
+
 // Ruta principal - Landing Page
 Route::get('/', [LandingController::class, 'index'])->name('landing');
 
@@ -48,7 +65,7 @@ Route::post('/registro', [DirectorioController::class, 'store'])->name('registro
 // Contacto
 Route::post('/contacto', [ContactoController::class, 'send'])->name('contacto.send');
 
-// Ruta para servir imágenes de storage
+// Ruta para servir imágenes de storage (SIN middleware)
 Route::get('/storage-image/{path}', function ($path) {
     $fullPath = storage_path('app/public/' . $path);
     if (!file_exists($fullPath)) {
@@ -83,8 +100,7 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::resource('categorias', AdminCategoriaController::class)->parameters([
         'categorias' => 'categoria'
     ]);
-    
 });
 
-// Rutas de autenticación
+// Rutas de autenticación (Laravel Breeze)
 require __DIR__.'/auth.php';

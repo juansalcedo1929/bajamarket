@@ -88,26 +88,27 @@ class Productor extends Model
     /**
      * Obtener URL del logo
      */
-    public function getLogoUrlAttribute(): string
-    {
-        if ($this->logo && file_exists(public_path('storage/' . $this->logo))) {
-            return asset('storage/' . $this->logo);
+public function getLogoUrlAttribute(): string
+{
+    if ($this->logo) {
+        if (filter_var($this->logo, FILTER_VALIDATE_URL)) {
+            return $this->logo;
         }
-        
-        return asset('images/default-producer.png');
+        return route('storage.image', ['path' => $this->logo]);
     }
+    return asset('images/default-producer.png');
+}
 
-    /**
-     * Obtener URL del banner
-     */
-    public function getBannerUrlAttribute(): string
-    {
-        if ($this->banner && file_exists(public_path('storage/' . $this->banner))) {
-            return asset('storage/' . $this->banner);
+public function getBannerUrlAttribute(): string
+{
+    if ($this->banner) {
+        if (filter_var($this->banner, FILTER_VALIDATE_URL)) {
+            return $this->banner;
         }
-        
-        return '';
+        return route('storage.image', ['path' => $this->banner]);
     }
+    return '';
+}
 
     public function getUrlAttribute(): string
     {
