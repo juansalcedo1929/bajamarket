@@ -26,16 +26,11 @@
     <div class="container mx-auto px-4">
         <div class="bg-white rounded-2xl shadow-lg -mt-16 relative z-10 p-8">
             <div class="flex flex-col md:flex-row items-start gap-6">
-                <!-- Logo - CORREGIDO -->
-                @if($productor->logo)
-                    <img src="{{ asset('storage/' . $productor->logo) }}" 
-                         alt="{{ $productor->nombre_empresa }}" 
-                         class="w-24 h-24 rounded-full object-cover flex-shrink-0 border-4 border-white shadow-lg">
-                @else
-                    <div class="w-24 h-24 rounded-full flex items-center justify-center text-white text-3xl font-bold bg-gradient-to-br from-[#6a1c32] to-[#b17a45] flex-shrink-0 border-4 border-white shadow-lg">
-                        {{ substr($productor->nombre_empresa, 0, 1) }}
-                    </div>
-                @endif
+     @if($productor->logo)
+    <img src="{{ $productor->logo_url }}" alt="{{ $productor->nombre_empresa }}" class="...">
+@else
+    <div class="...">{{ substr($productor->nombre_empresa, 0, 1) }}</div>
+@endif
                 
                 <!-- Info principal -->
                 <div class="flex-1">

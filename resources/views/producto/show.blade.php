@@ -161,16 +161,13 @@
             <div class="bg-white rounded-lg shadow-sm p-3 border border-gray-100 producer-card transition-all">
                 <div class="flex items-center gap-2.5">
                     {{-- LOGO --}}
-                    <a href="{{ route('directorio.show', $productor) }}" class="flex-shrink-0">
-                        @if($productor->logo)
-                            <img src="{{ asset('storage/' . $productor->logo) }}" 
-                                 alt="{{ $productor->nombre_empresa }}" 
-                                 class="w-10 h-10 rounded-full object-cover border border-white shadow-sm hover:opacity-80">
-                        @else
-                            <div class="w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-bold bg-gradient-to-br from-[#6a1c32] to-[#b17a45] shadow-sm hover:opacity-80">
-                                {{ substr($productor->nombre_empresa, 0, 1) }}
-                            </div>
-                        @endif
+           @if($productor->logo)
+    <img src="{{ $productor->logo_url }}" alt="{{ $productor->nombre_empresa }}" class="w-10 h-10 rounded-full object-cover border border-white shadow-sm hover:opacity-80">
+@else
+    <div class="w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-bold bg-gradient-to-br from-[#6a1c32] to-[#b17a45] shadow-sm hover:opacity-80">
+        {{ substr($productor->nombre_empresa, 0, 1) }}
+    </div>
+@endif
                     </a>
                     
                     <div class="flex-1 min-w-0">

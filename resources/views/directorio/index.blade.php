@@ -75,15 +75,13 @@
                 <div class="p-6">
                     <div class="flex items-start space-x-4">
                         {{-- LOGO CORREGIDO --}}
-                        @if($productor->logo)
-                            <img src="{{ asset('storage/' . $productor->logo) }}" 
-                                 alt="{{ $productor->nombre_empresa }}" 
-                                 class="w-16 h-16 rounded-full object-cover flex-shrink-0 border-2 border-white shadow-md">
-                        @else
-                            <div class="w-16 h-16 rounded-full flex items-center justify-center text-white text-xl font-bold bg-gradient-to-br from-[#6a1c32] to-[#b17a45] flex-shrink-0">
-                                {{ substr($productor->nombre_empresa, 0, 1) }}
-                            </div>
-                        @endif
+                 @if($productor->logo)
+    <img src="{{ $productor->logo_url }}" alt="Logo" class="w-10 h-10 rounded-full object-cover mr-3">
+@else
+    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-[#6a1c32] to-[#b17a45] flex items-center justify-center text-white font-bold mr-3">
+        {{ substr($productor->nombre_empresa, 0, 1) }}
+    </div>
+@endif
                         
                         <div class="flex-1">
                             <div class="flex items-center justify-between mb-1">

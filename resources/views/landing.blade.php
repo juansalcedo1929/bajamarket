@@ -168,15 +168,13 @@
             @foreach($productoresDestacados as $productor)
             <div class="bg-white rounded-xl shadow-md p-6 text-center hover:shadow-xl transition border border-gray-100">
                 {{-- LOGO CORREGIDO - AQUÍ ESTABA EL PROBLEMA --}}
-                @if($productor->logo)
-                    <img src="{{ asset('storage/' . $productor->logo) }}" 
-                         alt="{{ $productor->nombre_empresa }}" 
-                         class="w-24 h-24 mx-auto mb-4 rounded-full object-cover border-4 border-white shadow-lg">
-                @else
-                    <div class="w-24 h-24 mx-auto mb-4 rounded-full flex items-center justify-center text-white text-2xl font-bold bg-gradient-to-br from-[#6a1c32] to-[#b17a45] shadow-lg">
-                        {{ substr($productor->nombre_empresa, 0, 1) }}
-                    </div>
-                @endif
+         @if($productor->logo)
+    <img src="{{ $productor->logo_url }}" alt="{{ $productor->nombre_empresa }}" class="w-24 h-24 mx-auto mb-4 rounded-full object-cover border-4 border-white shadow-lg">
+@else
+    <div class="w-24 h-24 mx-auto mb-4 rounded-full flex items-center justify-center text-white text-2xl font-bold bg-gradient-to-br from-[#6a1c32] to-[#b17a45] shadow-lg">
+        {{ substr($productor->nombre_empresa, 0, 1) }}
+    </div>
+@endif
                 
                 <h4 class="font-semibold text-lg mb-1 text-[#3c3c3b]">{{ $productor->nombre_empresa }}</h4>
                 <p class="text-sm text-gray-500 mb-2 flex items-center justify-center">
