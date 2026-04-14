@@ -118,7 +118,7 @@
                     <label class="block text-sm font-medium text-gray-700 mb-2">Logo actual</label>
                     <div class="flex items-center gap-4">
                         @if($productor->logo)
-                            <img src="{{ asset('storage/' . $productor->logo) }}" 
+                            <img src="{{ $productor->logo_url }}" 
                                  alt="Logo actual" 
                                  class="w-20 h-20 rounded-full object-cover border-2 border-gray-200">
                         @else

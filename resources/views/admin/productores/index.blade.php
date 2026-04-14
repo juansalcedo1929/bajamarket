@@ -64,7 +64,7 @@
                         <div class="flex items-center">
                             {{-- LOGO CORREGIDO --}}
                             @if($productor->logo)
-                                <img src="{{ asset('storage/' . $productor->logo) }}" 
+                                <img src="{{ $productor->logo_url }}" 
                                      alt="Logo" 
                                      class="w-10 h-10 rounded-full object-cover mr-3">
                             @else

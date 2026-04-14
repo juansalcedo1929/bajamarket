@@ -17,7 +17,7 @@
             <div class="flex items-start gap-6 -mt-16">
                 {{-- LOGO CORREGIDO --}}
                 @if($productor->logo)
-                    <img src="{{ asset('storage/' . $productor->logo) }}" 
+                    <img src="{{ $productor->logo_url }}" 
                          alt="Logo de {{ $productor->nombre_empresa }}" 
                          class="w-24 h-24 rounded-full object-cover border-4 border-white shadow-lg">
                 @else
