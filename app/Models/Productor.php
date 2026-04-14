@@ -91,14 +91,17 @@ class Productor extends Model
 public function getLogoUrlAttribute(): string
 {
     if ($this->logo) {
-        if (filter_var($this->logo, FILTER_VALIDATE_URL)) {
+        // Si ya es una URL completa, devolverla
+        if (str_starts_with($this->logo, 'http')) {
             return $this->logo;
         }
+        
+        // Usar la ruta storage-image (CORRECTA PARA RAILWAY)
         return route('storage.image', ['path' => $this->logo]);
     }
+    
     return asset('images/default-producer.png');
 }
-
 public function getBannerUrlAttribute(): string
 {
     if ($this->banner) {
