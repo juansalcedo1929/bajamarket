@@ -61,63 +61,76 @@ class DirectorioController extends Controller
         return view('directorio.create', compact('municipios', 'productos'));
     }
     
-public function store(Request $request)
-{
-    $validated = $request->validate([
-        'nombre_empresa' => 'required|string|max:200',
-        'nombre_contacto' => 'required|string|max:200',
-        'email' => 'required|email|max:200',
-        'telefono_principal' => 'required|string|max:20',
-        'telefono_secundario' => 'nullable|string|max:20',
-        'whatsapp' => 'nullable|string|max:20',
-        'sitio_web' => 'nullable|url|max:200',
-        'direccion' => 'required|string',
-        'colonia' => 'nullable|string|max:100',
-        'codigo_postal' => 'nullable|string|max:10',
-        'municipio_id' => 'required|exists:municipios,id', // ← VALIDACIÓN OBLIGATORIA
-        'descripcion' => 'nullable|string',
-        'productos' => 'required|array|min:1',
-        'productos.*' => 'exists:productos,id',
-        'facebook' => 'nullable|url',
-        'instagram' => 'nullable|url',
-        'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
-    ], [
-        'municipio_id.required' => 'Debes seleccionar un municipio.',
-        'municipio_id.exists' => 'El municipio seleccionado no es válido.',
-        'productos.required' => 'Debes seleccionar al menos un producto que ofertas.',
-        'productos.min' => 'Debes seleccionar al menos un producto.',
-        'logo.image' => 'El archivo debe ser una imagen válida.',
-        'logo.mimes' => 'El logo debe ser de tipo: jpeg, png, jpg, gif o webp.',
-        'logo.max' => 'El logo no debe pesar más de 2MB.',
-    ]);
-
-    try {
-        // Crear productor con estatus pendiente
-        $productor = Productor::create([
-            'nombre_empresa' => $validated['nombre_empresa'],
-            'nombre_contacto' => $validated['nombre_contacto'],
-            'email' => $validated['email'],
-            'telefono_principal' => $validated['telefono_principal'],
-            'telefono_secundario' => $validated['telefono_secundario'] ?? null,
-            'whatsapp' => $validated['whatsapp'] ?? null,
-            'sitio_web' => $validated['sitio_web'] ?? null,
-            'direccion' => $validated['direccion'],
-            'colonia' => $validated['colonia'] ?? null,
-            'codigo_postal' => $validated['codigo_postal'] ?? null,
-            'municipio_id' => $validated['municipio_id'], // ← SIEMPRE PRESENTE
-            'descripcion' => $validated['descripcion'] ?? null,
-            'facebook' => $validated['facebook'] ?? null,
-            'instagram' => $validated['instagram'] ?? null,
-            'estatus' => 'pendiente',
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'nombre_empresa' => 'required|string|max:200',
+            'nombre_contacto' => 'required|string|max:200',
+            'email' => 'required|email|max:200',
+            'telefono_principal' => 'required|string|max:20',
+            'telefono_secundario' => 'nullable|string|max:20',
+            'whatsapp' => 'nullable|string|max:20',
+            'sitio_web' => 'nullable|url|max:200',
+            'direccion' => 'required|string',
+            'colonia' => 'nullable|string|max:100',
+            'codigo_postal' => 'nullable|string|max:10',
+            'municipio_id' => 'required|exists:municipios,id',
+            'descripcion' => 'nullable|string',
+            'productos' => 'required|array|min:1',
+            'productos.*' => 'exists:productos,id',
+            'facebook' => 'nullable|url',
+            'instagram' => 'nullable|url',
+            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+        ], [
+            'municipio_id.required' => 'Debes seleccionar un municipio.',
+            'municipio_id.exists' => 'El municipio seleccionado no es válido.',
+            'productos.required' => 'Debes seleccionar al menos un producto que ofertas.',
+            'productos.min' => 'Debes seleccionar al menos un producto.',
+            'logo.image' => 'El archivo debe ser una imagen válida.',
+            'logo.mimes' => 'El logo debe ser de tipo: jpeg, png, jpg, gif o webp.',
+            'logo.max' => 'El logo no debe pesar más de 2MB.',
         ]);
 
-        // Resto del código...
-        
-    } catch (\Exception $e) {
-        \Log::error('Error al registrar productor: ' . $e->getMessage());
-        return redirect()->back()
-            ->with('error', 'Ocurrió un error al procesar tu registro. Por favor intenta de nuevo.')
-            ->withInput();
+        try {
+            // Crear productor con estatus pendiente
+            $productor = Productor::create([
+                'nombre_empresa' => $validated['nombre_empresa'],
+                'nombre_contacto' => $validated['nombre_contacto'],
+                'email' => $validated['email'],
+                'telefono_principal' => $validated['telefono_principal'],
+                'telefono_secundario' => $validated['telefono_secundario'] ?? null,
+                'whatsapp' => $validated['whatsapp'] ?? null,
+                'sitio_web' => $validated['sitio_web'] ?? null,
+                'direccion' => $validated['direccion'],
+                'colonia' => $validated['colonia'] ?? null,
+                'codigo_postal' => $validated['codigo_postal'] ?? null,
+                'municipio_id' => $validated['municipio_id'],
+                'descripcion' => $validated['descripcion'] ?? null,
+                'facebook' => $validated['facebook'] ?? null,
+                'instagram' => $validated['instagram'] ?? null,
+                'estatus' => 'pendiente',
+            ]);
+
+            // ✅ SINCRONIZAR PRODUCTOS
+            $productor->productos()->sync($validated['productos']);
+
+            // ✅ GUARDAR LOGO
+            if ($request->hasFile('logo') && $request->file('logo')->isValid()) {
+                $file = $request->file('logo');
+                $extension = $file->getClientOriginalExtension();
+                $fileName = 'productor_' . $productor->id . '_' . time() . '.' . $extension;
+                $path = $file->storeAs('productores', $fileName, 'public');
+                $productor->update(['logo' => $path]);
+            }
+
+            return redirect()->route('landing')
+                ->with('success', '¡Gracias por registrarte! Tu solicitud está pendiente de aprobación. Te notificaremos por correo cuando sea aprobada.');
+
+        } catch (\Exception $e) {
+            \Log::error('Error al registrar productor: ' . $e->getMessage());
+            return redirect()->back()
+                ->with('error', 'Ocurrió un error al procesar tu registro. Por favor intenta de nuevo.')
+                ->withInput();
+        }
     }
-}
 }
